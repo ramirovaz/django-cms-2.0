@@ -21,11 +21,16 @@ class LinkPlugin(CMSPluginBase):
             link = instance.page_link.get_absolute_url()
         else:
             link = ""
+        if instance.target:
+            target = instance.target
+        else:
+            target = ''            
         context.update({
             'name':settings.dbgettext(instance.name),
             'link':link, 
             'placeholder':placeholder,
-            'object':instance
+            'object':instance,
+            'target': target
         })
         return context
     
