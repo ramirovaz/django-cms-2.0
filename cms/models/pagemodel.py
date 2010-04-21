@@ -1,4 +1,3 @@
-
 from os.path import join
 from datetime import datetime
 from django.conf import settings
@@ -46,9 +45,7 @@ class Page(MpttPublisher):
     creation_date = models.DateTimeField(editable=False, default=datetime.now)
     publication_date = models.DateTimeField(_("publication date"), null=True, blank=True, help_text=_('When the page should go live. Status must be "Published" for page to go live.'), db_index=True)
     publication_end_date = models.DateTimeField(_("publication end date"), null=True, blank=True, help_text=_('When to expire the page. Leave empty to never expire.'), db_index=True)
-
     last_modified_date = models.DateTimeField(null=True, blank=True, auto_now = True)
-
     in_navigation = models.BooleanField(_("in navigation"), default=True, db_index=True)
     soft_root = models.BooleanField(_("soft root"), db_index=True, default=False, help_text=_("All ancestors will not be displayed in the navigation"))
     reverse_id = models.CharField(_("id"), max_length=40, db_index=True, blank=True, null=True, help_text=_("An unique identifier that is used with the page_url templatetag for linking to this page"))
@@ -280,7 +277,7 @@ class Page(MpttPublisher):
         from cms.utils.permissions import _thread_locals
         user = getattr(_thread_locals, "user", None)
         if user:
-            self.changed_by = user.username
+            self.changed_by = user.get_full_name()
         else:
             self.changed_by = "script"
         if not self.pk:
@@ -384,7 +381,6 @@ class Page(MpttPublisher):
             return attribute
         except AttributeError:
             return None
-
     
     def get_path(self, language=None, fallback=True, version_id=None, force_reload=False):
         """
